@@ -14,7 +14,7 @@
 <h2>How to Run</h2>
 <ol>
   <li>Clone the repository:<br>
-    <code>git clone https:[//github.com/Preyoshi04/tic-tac-toe-java.git](https://github.com/Preyoshi04/Tic-Tac-Toe)</code>
+    <code>git clone : https://github.com/Preyoshi04/Tic-Tac-Toe</code>
   </li>
   <li>Navigate to the project directory:<br>
     <code>cd tic-tac-toe-java</code>
