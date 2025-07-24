@@ -1,135 +1,113 @@
 import java.util.Scanner;
 
 public class Tic_Tac_Toe {
-    public static void main(String args[])
-    {
-        //input board
-        char[][] board=new char[3][3];
-        //initially board is empty
-        for(int row=0;row<board.length;row++)
-        {
-            for(int col=0;col<board[row].length;col++)
-            {
-                board[row][col]=' ';
-            }
-        }
 
-        //input player (initialise to X)
+    public static void main(String[] args) {
+        char[][] board = new char[3][3];
+        initializeBoard(board);
+
         char player = 'X';
-        //initialy board empty , so game will not be over
-        boolean gameOver=false;
+        boolean gameOver = false;
+        Scanner sc = new Scanner(System.in);
 
-        Scanner sc=new Scanner(System.in);
+        System.out.println("\n\t----- WELCOME TO TIC TAC TOE -----\n");
+        System.out.println("Players: X and O");
+        System.out.println("Enter slot number (1 to 9) to make a move as shown below:\n");
+        printSlotBoard();
 
-        //game starts
-        while(!gameOver)
-        {
-            //print empty board
-            System.out.println();
-            System.out.println("-------INITIAL BOARD IS-------");
-            System.out.println();
+        while (!gameOver) {
+            System.out.println("\nCurrent Board:");
             printBoard(board);
-            //take input from player
-            System.out.println("\t--- TURN: PLAYER "+player+" ---");
-            System.out.println();
-            System.out.print("\t Player "+player+" enters : ");
-            int row = sc.nextInt();
-            int col = sc.nextInt();
-            System.out.println();
 
-            //checks whether inputted cell is occupied or not
-            if(board[row][col]==' ')
-            {
-                //place the symbol
-                board[row][col]=player;
-                gameOver=haveWon(board,player);   //if player wins, give results
-                if(gameOver)
-                {
-                    System.out.println();
-                    System.out.println("------ Player "+player+"has won! --------");
-                    System.out.println();
-                }
-                                  //swaps the player
-                else if(isBoardFull(board))
-                {
-                     System.out.println();
-                     System.out.println("Board full, Game over!");
-                     System.out.println();
-                     break;
-                }
-                else
-                {
-                   player=(player=='X')? 'O':'X';
-                }
+            System.out.print("\nPlayer " + player + ", enter your move (1-9): ");
+            int slot = sc.nextInt();
+
+            if (slot < 1 || slot > 9) {
+                System.out.println("Invalid slot! Choose between 1 to 9.");
+                continue;
             }
-            else
-            {
-                System.out.println();
-                System.out.println("Invalid move..Try again!!");
-                System.out.println();
+
+            int row = (slot - 1) / 3;
+            int col = (slot - 1) % 3;
+
+            if (board[row][col] == ' ') {
+                board[row][col] = player;
+                if (haveWon(board, player)) {
+                    System.out.println("\nFinal Board:");
+                    printBoard(board);
+                    System.out.println("\n Player " + player + " wins! 🎉\n");
+                    gameOver = true;
+                } else if (isBoardFull(board)) {
+                    System.out.println("\nFinal Board:");
+                    printBoard(board);
+                    System.out.println("\n It's a draw! Board is full.\n");
+                    break;
+                } else {
+                    player = (player == 'X') ? 'O' : 'X'; // Switch turns
+                }
+            } else {
+                System.out.println("Slot already taken. Try again!");
             }
         }
-        System.out.println("-------FINAL BOARD IS-------");
-        System.out.println();
-        printBoard(board);
+
+        System.out.println("Thanks for playing!");
     }
 
-    public static void  printBoard(char[][] board)
-    {
-        System.out.println("-----------------------------------------");
-        for(int row=0;row<board.length;row++)
-        {
-            for(int col=0;col<board.length;col++)
-            {
-                System.out.print("\t"+board[row][col]+" | ");
-            }
-            System.out.println();
-        }
-        System.out.println("-----------------------------------------");
+    // Initializes the board with empty spaces
+    public static void initializeBoard(char[][] board) {
+        for (int row = 0; row < board.length; row++)
+            for (int col = 0; col < board[row].length; col++)
+                board[row][col] = ' ';
     }
 
-    public static boolean haveWon(char[][] board,char player)
-    {
-        //for rows straight line
-        
-        for(int row=0;row<board.length;row++)
-        {
-            if(board[row][0]==player && board[row][1]==player && board[row][2]==player)
-            {
-            return true;
+    // Prints the board with current game state
+    public static void printBoard(char[][] board) {
+        System.out.println("-------------");
+        for (int row = 0; row < board.length; row++) {
+            System.out.print("|");
+            for (int col = 0; col < board[row].length; col++) {
+                System.out.print(" " + board[row][col] + " |");
             }
+            System.out.println("\n-------------");
         }
-        //for cols straight line
-        for(int col=0;col<board[0].length;col++)
-        {
-            if(board[0][col]==player && board[1][col]==player && board[2][col]==player)
-            {
+    }
+
+    // Prints the initial board showing slot numbers (1–9)
+    public static void printSlotBoard() {
+        int slot = 1;
+        System.out.println("-------------");
+        for (int i = 0; i < 3; i++) {
+            System.out.print("|");
+            for (int j = 0; j < 3; j++) {
+                System.out.printf(" %d |", slot++);
+            }
+            System.out.println("\n-------------");
+        }
+    }
+
+    // Checks if the given player has won
+    public static boolean haveWon(char[][] board, char player) {
+        // Rows and Columns
+        for (int i = 0; i < 3; i++) {
+            if ((board[i][0] == player && board[i][1] == player && board[i][2] == player) || 
+                (board[0][i] == player && board[1][i] == player && board[2][i] == player)) {
                 return true;
             }
         }
-        if(board[0][0]==player && board[1][1]==player && board[2][2]==player)
-        {
+        // Diagonals
+        if ((board[0][0] == player && board[1][1] == player && board[2][2] == player) || 
+            (board[0][2] == player && board[1][1] == player && board[2][0] == player)) {
             return true;
         }
-            if(board[0][2]==player && board[1][1]==player && board[2][0]==player)
-            {
-                return true;
-            }
         return false;
     }
 
-    public static boolean isBoardFull(char[][] board)
-    {
-        for(int row=0;row<board.length;row++)
-        {
-            for(int col=0;col<board[row].length;col++)
-            {
-                if(board[row][col]==' ')
-                {
+    // Checks if the board is full
+    public static boolean isBoardFull(char[][] board) {
+        for (int row = 0; row < board.length; row++)
+            for (int col = 0; col < board[row].length; col++)
+                if (board[row][col] == ' ')
                     return false;
-                }
-            }
-        }
         return true;
     }
 }
